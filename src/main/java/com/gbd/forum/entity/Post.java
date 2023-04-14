@@ -35,12 +35,13 @@ public class Post  {
     private Long partId;
     //逻辑删除（0未删除，1已删除）
     @TableLogic
+    @TableField(fill = FieldFill.INSERT)
     private Integer isDelete;
     //创建时间
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     //更新时间
-    @TableField(fill = FieldFill.UPDATE)
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
 

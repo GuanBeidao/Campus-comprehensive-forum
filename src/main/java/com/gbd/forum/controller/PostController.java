@@ -30,13 +30,27 @@ public class PostController {
     /**
      * 分页查询所有数据
      *
-     * @param page 分页对象
-     * @param post 查询实体
+     * @param pageNum 当前页数
+     * @param pageSize 每页数据大小
      * @return 所有数据
      */
-    @GetMapping("")
-    public ResponseResult selectAll(Page<Post> page, Post post) {
-        return null;
+    @GetMapping("/recommend/{pageNum}/{pageSize}/{schoolId}/{partId}")
+    public ResponseResult selectAll(@PathVariable Integer pageNum,@PathVariable Integer pageSize,@PathVariable Long schoolId,@PathVariable Long partId) {
+        Page<Post> postPage = postService.recommend(pageNum,pageSize,schoolId,partId);
+        return ResponseResult.okResult(postPage);
+    }
+
+    /**
+     * 分页查询所有者的帖子
+     *
+     * @param pageNum 当前页数
+     * @param pageSize 每页数据大小
+     * @return 所有数据
+     */
+    @GetMapping("/getPostByUserId/{pageNum}/{pageSize}/{userId}")
+    public ResponseResult owner(@PathVariable Integer pageNum,@PathVariable Integer pageSize,@PathVariable Long userId) {
+        Page<Post> postPage = postService.getPostByUserId(pageNum,pageSize,userId);
+        return ResponseResult.okResult(postPage);
     }
 
     /**
@@ -47,7 +61,8 @@ public class PostController {
      */
     @GetMapping("{id}")
     public ResponseResult selectOne(@PathVariable Serializable id) {
-        return null;
+        Post post = postService.getById(id);
+        return ResponseResult.okResult(post);
     }
 
     /**
@@ -80,7 +95,7 @@ public class PostController {
      * @param postId 帖子id
      * @return 删除结果
      */
-    @DeleteMapping("/removePost")
+    @DeleteMapping("/removePost/{postId}")
     public ResponseResult delete(@PathVariable Long postId) {
         postService.removeById(postId);
         return ResponseResult.okResult();
