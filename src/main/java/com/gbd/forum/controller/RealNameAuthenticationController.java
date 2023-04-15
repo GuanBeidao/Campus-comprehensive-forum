@@ -47,7 +47,8 @@ public class RealNameAuthenticationController {
      */
     @GetMapping("{id}")
     public ResponseResult selectOne(@PathVariable Serializable id) {
-        return null;
+        RealNameAuthentication realNameAuthentication = realNameAuthenticationService.getById(id);
+        return ResponseResult.okResult(realNameAuthentication);
     }
 
     /**
@@ -58,6 +59,7 @@ public class RealNameAuthenticationController {
      */
     @PostMapping
     public ResponseResult insert(@RequestBody RealNameAuthentication realNameAuthentication) {
+
         return null;
     }
 

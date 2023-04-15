@@ -1,7 +1,5 @@
 package com.gbd.forum.controller;
 
-
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gbd.forum.entity.Follow;
@@ -11,8 +9,6 @@ import com.gbd.forum.utils.ResponseResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * (Follow)表控制层

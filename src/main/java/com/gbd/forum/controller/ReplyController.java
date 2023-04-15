@@ -62,17 +62,6 @@ public class ReplyController {
     }
 
     /**
-     * 修改数据
-     *
-     * @param reply 实体对象
-     * @return 修改结果
-     */
-    @PutMapping
-    public ResponseResult update(@RequestBody Reply reply) {
-        return null;
-    }
-
-    /**
      * 删除数据
      *
      * @param idList 主键结合
