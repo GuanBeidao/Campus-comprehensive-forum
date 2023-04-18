@@ -1,7 +1,9 @@
 package com.gbd.forum.controller;
 
 import com.gbd.forum.entity.Partition;
+import com.gbd.forum.entity.dto.PartitionDto;
 import com.gbd.forum.service.PartitionService;
+import com.gbd.forum.utils.BeanCopyUtils;
 import com.gbd.forum.utils.ResponseResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +34,8 @@ public class PartitionController {
     @GetMapping
     public ResponseResult selectAll() {
         List<Partition> list = partitionService.list();
-        return ResponseResult.okResult(list);
+        List<PartitionDto> partitionDtos = BeanCopyUtils.copyBeanList(list, PartitionDto.class);
+        return ResponseResult.okResult(partitionDtos);
     }
 
     /**

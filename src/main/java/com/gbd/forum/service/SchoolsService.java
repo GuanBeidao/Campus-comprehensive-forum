@@ -2,6 +2,9 @@ package com.gbd.forum.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gbd.forum.entity.Schools;
+import com.gbd.forum.entity.dto.SchoolDto;
+
+import java.util.List;
 
 
 /**
@@ -12,5 +15,6 @@ import com.gbd.forum.entity.Schools;
  */
 public interface SchoolsService extends IService<Schools> {
 
+    List<SchoolDto> getAllSchool();
 }
 

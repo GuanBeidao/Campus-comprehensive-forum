@@ -3,9 +3,11 @@ package com.gbd.forum.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gbd.forum.entity.BaseUserInfo;
 import com.gbd.forum.entity.Users;
+import com.gbd.forum.entity.dto.UserDto;
 import com.gbd.forum.entity.vo.LoginVo;
 import com.gbd.forum.entity.vo.RegisterVo;
 import com.gbd.forum.service.UsersService;
+import com.gbd.forum.utils.BeanCopyUtils;
 import com.gbd.forum.utils.RedisCache;
 import com.gbd.forum.utils.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,8 +80,8 @@ public class UsersController {
     @GetMapping("getById/{id}")
     public ResponseResult selectOne(@PathVariable Serializable id) {
         Users user = this.usersService.getById(id);
-        user.setPassword("");
-        return ResponseResult.okResult(user);
+        UserDto userInfo = BeanCopyUtils.copyBean(user, UserDto.class);
+        return ResponseResult.okResult(userInfo);
     }
 
 
@@ -93,18 +95,6 @@ public class UsersController {
     @GetMapping
     public ResponseResult selectAll(Page<Users> page, Users users) {
 //        return success(this.usersService.page(page, new QueryWrapper<>(users)));
-        return null;
-    }
-
-    /**
-     * 新增数据
-     *
-     * @param users 实体对象
-     * @return 新增结果
-     */
-    @PostMapping
-    public ResponseResult insert(@RequestBody Users users) {
-
         return null;
     }
 

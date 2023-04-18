@@ -4,6 +4,7 @@ package com.gbd.forum.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gbd.forum.entity.Schools;
+import com.gbd.forum.entity.dto.SchoolDto;
 import com.gbd.forum.service.SchoolsService;
 import com.gbd.forum.utils.ResponseResult;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +31,12 @@ public class SchoolsController {
     /**
      * 分页查询所有数据
      *
-     * @param page 分页对象
-     * @param schools 查询实体
      * @return 所有数据
      */
-    @GetMapping
-    public ResponseResult selectAll(Page<Schools> page, Schools schools) {
-        return null;
+    @GetMapping("/getAllSchool")
+    public ResponseResult selectAll() {
+        List<SchoolDto> list = schoolsService.getAllSchool();
+        return ResponseResult.okResult(list);
     }
 
     /**
