@@ -1,135 +1,113 @@
 package com.gbd.forum.utils;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 /**
- * @author syh
- * @date 2022-10-30 14:39
  * JWT工具类
  */
 public class JwtUtil {
 
-    /**
-     * 过期时间2小时，单位毫秒
-     */
-    public static final long EXPIRE = 1000*60*60*2;
+    //有效期为
+    public static final Long JWT_TTL = 24*60 * 60 *1000L;// 60 * 60 *1000  一个小时
+    //设置秘钥明文
+    public static final String JWT_KEY = "gbd";
 
-    /*
-     * 秘钥
-     * */
-    public static final String SECRET = "ukc8BDbRigUDaY6pZFfWus2jZWLPHO";
+    public static String getUUID(){
+        String token = UUID.randomUUID().toString().replaceAll("-", "");
+        return token;
+    }
+    
+    /**
+     * 生成jtw
+     * @param subject token中要存放的数据（json格式）
+     * @return
+     */
+    public static String createJWT(String subject) {
+        JwtBuilder builder = getJwtBuilder(subject, null, getUUID());// 设置过期时间
+        return builder.compact();
+    }
 
     /**
-     * 生成token字符串的方法
-     *
-     * @param userName  用户名称
-     * @param password  用户密码
-     * @return token字符串
+     * 生成jtw
+     * @param subject token中要存放的数据（json格式）
+     * @param ttlMillis token超时时间
+     * @return
      */
-    public static String getJwtToken(String userId){
+    public static String createJWT(String subject, Long ttlMillis) {
+        JwtBuilder builder = getJwtBuilder(subject, ttlMillis, getUUID());// 设置过期时间
+        return builder.compact();
+    }
+
+    private static JwtBuilder getJwtBuilder(String subject, Long ttlMillis, String uuid) {
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        SecretKey secretKey = generalKey();
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+        if(ttlMillis==null){
+            ttlMillis=JwtUtil.JWT_TTL;
+        }
+        long expMillis = nowMillis + ttlMillis;
+        Date expDate = new Date(expMillis);
         return Jwts.builder()
-                //JWT头信息
-                .setHeaderParam("typ", "JWT")
-                .setHeaderParam("alg", "HS2256")
-                //设置分类；设置过期时间 一个当前时间，一个加上设置的过期时间常量
-                .setSubject("user")
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
-                //设置token主体信息，存储用户信息
-                .claim("userId", userId)
-                //.signWith(SignatureAlgorithm.ES256, SECRET)
-                .signWith(SignatureAlgorithm.HS256, SECRET)
-                .compact();
+                .setId(uuid)              //唯一的ID
+                .setSubject(subject)   // 主题  可以是JSON数据
+                .setIssuer("sg")     // 签发者
+                .setIssuedAt(now)      // 签发时间
+                .signWith(signatureAlgorithm, secretKey) //使用HS256对称加密算法签名, 第二个参数为秘钥
+                .setExpiration(expDate);
     }
 
     /**
-     * 判断token是否存在与有效
-     *
-     * @param jwtToken  token串
-     * @return 验证结果
+     * 创建token
+     * @param id
+     * @param subject
+     * @param ttlMillis
+     * @return
      */
-    public static boolean checkToken(String jwtToken){
-        if (StringUtils.isBlank(jwtToken)){
-            return false;
-        }
-        try{
-            //验证token
-            Jwts.parser().setSigningKey(SECRET).parseClaimsJws(jwtToken);
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+    public static String createJWT(String id, String subject, Long ttlMillis) {
+        JwtBuilder builder = getJwtBuilder(subject, ttlMillis, id);// 设置过期时间
+        return builder.compact();
+    }
+
+    public static void main(String[] args) throws Exception {
+        String token = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjYWM2ZDVhZi1mNjVlLTQ0MDAtYjcxMi0zYWEwOGIyOTIwYjQiLCJzdWIiOiJzZyIsImlzcyI6InNnIiwiaWF0IjoxNjM4MTA2NzEyLCJleHAiOjE2MzgxMTAzMTJ9.JVsSbkP94wuczb4QryQbAke3ysBDIL5ou8fWsbt_ebg";
+        Claims claims = parseJWT(token);
+        System.out.println(claims);
     }
 
     /**
-     * 判断token是否存在与有效
-     *
-     * @param request  request
-     * @return 验证结果
+     * 生成加密后的秘钥 secretKey
+     * @return
      */
-    public static boolean checkToken(HttpServletRequest request){
-        try {
-            String token = request.getHeader("token");
-            if (StringUtils.isBlank(token)){
-                return false;
-            }
-            Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+    public static SecretKey generalKey() {
+        byte[] encodedKey = Base64.getDecoder().decode(JwtUtil.JWT_KEY);
+        SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
+        return key;
     }
-
+    
     /**
-     * 解密token
+     * 解析
      *
-     * @param request request
-     * @return 解密结果map
+     * @param jwt
+     * @return
+     * @throws Exception
      */
-    public static Map<String, String> getMemberIdByJwtToken(HttpServletRequest request){
-        String token = request.getHeader("token");
-        return decode(token);
+    public static Claims parseJWT(String jwt) throws Exception {
+        SecretKey secretKey = generalKey();
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(jwt)
+                .getBody();
     }
 
-    /**
-     * 解密token
-     *
-     * @param token token字符串
-     * @return 解密结果map
-     */
-    public static Map<String, String> getMemberIdByJwtToken(String token){
-        return decode(token);
-    }
 
-    public static String getUserIdBtJwtToken(String token){
-        Map<String, String> map = decode(token);
-        return map.get("userId");
-    }
-
-    public static Map<String, String> decode(String token) {
-        // 封装解密结果
-        Map<String, String> map = new HashMap<>();
-        if (StringUtils.isEmpty(token)){
-            return map;
-        }
-        Jws<Claims> claimsJws = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
-        Claims body = claimsJws.getBody();
-        String userId = (String) body.get("userId");
-        if (StringUtils.isBlank(userId)) {
-            userId = "";
-        }
-        map.put("userId", userId);
-        return map;
-    }
 }

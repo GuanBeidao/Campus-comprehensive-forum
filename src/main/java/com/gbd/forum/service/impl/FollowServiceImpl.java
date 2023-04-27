@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gbd.forum.entity.Follow;
-import com.gbd.forum.entity.Users;
+import com.gbd.forum.entity.User;
 import com.gbd.forum.mapper.FollowMapper;
 import com.gbd.forum.service.FollowService;
 import com.gbd.forum.service.UsersService;
@@ -28,40 +28,40 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
     private UsersService usersService;
 
     @Override
-    public Page<Users> pageFollower(Integer pageNum, Integer pageSize, Long followeeId) {
+    public Page<User> pageFollower(Integer pageNum, Integer pageSize, Long followeeId) {
         LambdaQueryWrapper<Follow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Follow::getFolloweeId,followeeId);
         Page<Follow> page = new Page<>(pageNum,pageSize);
         Page<Follow> followPage = this.page(page, wrapper);
         List<Follow> followList = followPage.getRecords();
-        List<Users> usersList = new ArrayList<>();
+        List<User> userList = new ArrayList<>();
         followList.forEach(item->{
-            Users user = usersService.getById(item.getFollowerId());
+            User user = usersService.getById(item.getFollowerId());
             user.setPassword("");
-            usersList.add(user);
+            userList.add(user);
         });
-        Page<Users> usersPage = new Page<>();
+        Page<User> usersPage = new Page<>();
         BeanUtils.copyProperties(followPage,usersPage);
-        usersPage.setRecords(usersList);
+        usersPage.setRecords(userList);
         return usersPage;
     }
 
     @Override
-    public Page<Users> pageFollowee(Integer pageNum, Integer pageSize, Long followerId) {
+    public Page<User> pageFollowee(Integer pageNum, Integer pageSize, Long followerId) {
         LambdaQueryWrapper<Follow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Follow::getFollowerId,followerId);
         Page<Follow> page = new Page<>(pageNum,pageSize);
         Page<Follow> followPage = this.page(page, wrapper);
         List<Follow> followList = followPage.getRecords();
-        List<Users> usersList = new ArrayList<>();
+        List<User> userList = new ArrayList<>();
         followList.forEach(item->{
-            Users user = usersService.getById(item.getFolloweeId());
+            User user = usersService.getById(item.getFolloweeId());
             user.setPassword("");
-            usersList.add(user);
+            userList.add(user);
         });
-        Page<Users> usersPage = new Page<>();
+        Page<User> usersPage = new Page<>();
         BeanUtils.copyProperties(followPage,usersPage);
-        usersPage.setRecords(usersList);
+        usersPage.setRecords(userList);
         return usersPage;
     }
 }

@@ -3,7 +3,7 @@ package com.gbd.forum.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gbd.forum.entity.Follow;
-import com.gbd.forum.entity.Users;
+import com.gbd.forum.entity.User;
 
 
 /**
@@ -14,8 +14,8 @@ import com.gbd.forum.entity.Users;
  */
 public interface FollowService extends IService<Follow> {
 
-    Page<Users> pageFollower(Integer pageNum, Integer pageSize, Long followeeId);
+    Page<User> pageFollower(Integer pageNum, Integer pageSize, Long followeeId);
 
-    Page<Users> pageFollowee(Integer pageNum, Integer pageSize, Long followerId);
+    Page<User> pageFollowee(Integer pageNum, Integer pageSize, Long followerId);
 }
 

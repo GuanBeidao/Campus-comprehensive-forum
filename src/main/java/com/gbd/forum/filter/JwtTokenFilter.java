@@ -1,17 +1,10 @@
 package com.gbd.forum.filter;
 
-import com.gbd.forum.enums.HttpCodeEnum;
-import com.gbd.forum.exception.SystemException;
-import com.gbd.forum.utils.JwtUtil;
 import lombok.SneakyThrows;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Date: 2023/4/12 15:02
@@ -19,7 +12,7 @@ import java.util.Map;
  * Description:
  */
 
-@Component
+//@Component
 @WebFilter(filterName = "JwtTokenFilter", urlPatterns = "/*")
 public class JwtTokenFilter implements Filter {
 

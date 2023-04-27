@@ -3,7 +3,7 @@ package com.gbd.forum.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gbd.forum.entity.Follow;
-import com.gbd.forum.entity.Users;
+import com.gbd.forum.entity.User;
 import com.gbd.forum.service.FollowService;
 import com.gbd.forum.utils.ResponseResult;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +35,7 @@ public class FollowController {
      */
     @GetMapping("/findFollower")
     public ResponseResult selectAllFollower(Integer pageNum, Integer pageSize, Long followeeId) {
-        Page<Users> usersPage = followService.pageFollower(pageNum, pageSize, followeeId);
+        Page<User> usersPage = followService.pageFollower(pageNum, pageSize, followeeId);
         return ResponseResult.okResult(usersPage);
     }
 
@@ -48,7 +48,7 @@ public class FollowController {
      */
     @GetMapping("/findFollowee")
     public ResponseResult selectAllFolowwee(Integer pageNum, Integer pageSize, Long followerId) {
-        Page<Users> usersPage = followService.pageFollowee(pageNum, pageSize, followerId);
+        Page<User> usersPage = followService.pageFollowee(pageNum, pageSize, followerId);
         return ResponseResult.okResult(usersPage);
     }
 
