@@ -25,8 +25,18 @@ public class OSSServiceImpl implements OSSService {
         //判断文件类型
         //获取原始文件名
         String originalFilename = img.getOriginalFilename();
+
         //对原始文件名进行判断
-        if(!originalFilename.endsWith(".png")){
+        boolean flag = false;
+        if(originalFilename.endsWith(".png")){
+            flag = true;
+        }
+
+        if(originalFilename.endsWith(".jpg")){
+            flag = true;
+        }
+
+        if(!flag){
             throw new SystemException(HttpCodeEnum.FILE_TYPE_ERROR);
         }
 

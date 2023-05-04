@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * (Users)表服务实现类
@@ -58,22 +59,19 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
 
     @Override
     public String lgoin(LoginVo user) {
-        // 创建Authentication对象
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername() , user.getPassword()) ;
-        // 调用AuthenticationManager的authenticate方法进行认证
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
-        if(authentication == null) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+
+        if (Objects.isNull(authenticate)){
             throw new RuntimeException("用户名或密码错误");
         }
-
-        // 将用户的数据存储到Redis中
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        System.out.println(loginUser);
-        String userId = loginUser.getUser().getId().toString();
-        redisCache.setCacheObject("login:"+userId, loginUser);
-
-        String token = JwtUtil.createJWT(userId);
-        return token;
+        //获取userid生成token
+        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+        Long id = loginUser.getUser().getId();
+        String jwt = JwtUtil.getJwtToken(String.valueOf(id));
+        //把用户信息存入redis
+        redisCache.setCacheObject("login:"+id,loginUser);
+        return jwt;
     }
 
     @Override

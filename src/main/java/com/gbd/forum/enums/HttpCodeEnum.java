@@ -10,7 +10,11 @@ public enum HttpCodeEnum {
 
     // 成功
     SUCCESS(200,"操作成功"),
-    // 登录
+    // 登录 201-210
+    LOGIN_SUCCESS(201,"登录成功"),
+
+    //文章
+    ADD_POST_SUCCESS(211,"发布文章成功"),
     NEED_LOGIN(401,"需要登录后操作"),
     NO_OPERATOR_AUTH(403,"无权限操作"),
     SYSTEM_ERROR(500,"出现错误"),
@@ -27,7 +31,9 @@ public enum HttpCodeEnum {
     USERNAME_NOT_NULL(511, "用户名不能为空"),
     NICKNAME_NOT_NULL(512, "昵称不能为空"),
     PASSWORD_NOT_NULL(513, "密码不能为空"),
-    EMAIL_NOT_NULL(514, "邮箱不能为空");
+    EMAIL_NOT_NULL(514, "邮箱不能为空"),
+
+    ADD_POST_FAIL(521,"发布文章失败");
     int code;
     String msg;
 

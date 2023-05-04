@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * (Post)表实体类
@@ -27,6 +28,8 @@ public class Post  {
     private String title;
     //内容
     private String content;
+    //图片地址
+    private String picUrls;
     //用户id
     private Long userId;
     //学校id
@@ -43,8 +46,6 @@ public class Post  {
     //更新时间
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
-
 
 }
 

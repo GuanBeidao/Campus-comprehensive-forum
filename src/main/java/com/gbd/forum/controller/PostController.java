@@ -4,6 +4,7 @@ package com.gbd.forum.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gbd.forum.entity.Post;
+import com.gbd.forum.enums.HttpCodeEnum;
 import com.gbd.forum.service.PostService;
 import com.gbd.forum.utils.ResponseResult;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ import java.util.List;
  * @since 2023-04-09 23:32:38
  */
 @RestController
-@RequestMapping("post")
+@RequestMapping("/post")
 public class PostController {
     /**
      * 服务对象
@@ -73,8 +74,13 @@ public class PostController {
      */
     @PostMapping("/addPost")
     public ResponseResult insert(@RequestBody Post post) {
+        System.out.println(post);
         boolean save = postService.save(post);
-        return ResponseResult.okResult();
+        if (save){
+            return ResponseResult.okResult(HttpCodeEnum.ADD_POST_SUCCESS);
+        }else {
+            return ResponseResult.errorResult(HttpCodeEnum.ADD_POST_FAIL);
+        }
     }
 
     /**

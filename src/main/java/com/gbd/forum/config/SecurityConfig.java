@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)     // 指定session的创建策略，不使用session
                 .and()                                                                          // 再次获取到HttpSecurity对象
                 .authorizeRequests()                                                            // 进行认证请求的配置
-                .antMatchers("/user/login").anonymous()                              // 对于登录接口，允许匿名访问
+                .antMatchers("/user/login","/partition","/schools/getAllSchool","/post/recommend/{pageNum}/{pageSize}/{schoolId}/{partId}").anonymous()                              // 对于登录接口，允许匿名访问
                 .anyRequest().authenticated();                                                  // 除了上面的请求以外所有的请求全部需要认证
 
         http.cors();    //允许资源跨域

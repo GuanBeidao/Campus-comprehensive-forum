@@ -6,6 +6,7 @@ import com.gbd.forum.entity.User;
 import com.gbd.forum.entity.dto.UserDto;
 import com.gbd.forum.entity.vo.LoginVo;
 import com.gbd.forum.entity.vo.RegisterVo;
+import com.gbd.forum.enums.HttpCodeEnum;
 import com.gbd.forum.service.UsersService;
 import com.gbd.forum.utils.BeanCopyUtils;
 import com.gbd.forum.utils.RedisCache;
@@ -55,7 +56,8 @@ public class UsersController {
         String token = usersService.lgoin(loginVo);
         Map<String,String> map = new HashMap<>();
         map.put("token",token);
-        return ResponseResult.okResult(map);
+        ResponseResult.okResult(HttpCodeEnum.LOGIN_SUCCESS);
+        return ResponseResult.okResult(HttpCodeEnum.LOGIN_SUCCESS,map);
     }
 
     /*
