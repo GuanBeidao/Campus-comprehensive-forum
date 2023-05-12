@@ -3,6 +3,10 @@ package com.gbd.forum.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gbd.forum.entity.Post;
+import com.gbd.forum.entity.dto.PostCardDto;
+
+import java.io.Serializable;
+import java.util.Map;
 
 
 /**
@@ -13,8 +17,10 @@ import com.gbd.forum.entity.Post;
  */
 public interface PostService extends IService<Post> {
 
-    Page<Post> recommend(Integer pageNum, Integer pageSize, Long schoolId, Long partId);
+    Page<PostCardDto> recommend(Integer pageNum, Integer pageSize, Long schoolId, Long partId);
 
     Page<Post> getPostByUserId(Integer pageNum, Integer pageSize, Long userId);
+
+    Map<String,Object> getDetailById(Serializable id);
 }
 

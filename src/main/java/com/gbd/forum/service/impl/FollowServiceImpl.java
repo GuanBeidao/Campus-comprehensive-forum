@@ -30,18 +30,18 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
     @Override
     public Page<User> pageFollower(Integer pageNum, Integer pageSize, Long followeeId) {
         LambdaQueryWrapper<Follow> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Follow::getFolloweeId,followeeId);
-        Page<Follow> page = new Page<>(pageNum,pageSize);
+        wrapper.eq(Follow::getFolloweeId, followeeId);
+        Page<Follow> page = new Page<>(pageNum, pageSize);
         Page<Follow> followPage = this.page(page, wrapper);
         List<Follow> followList = followPage.getRecords();
         List<User> userList = new ArrayList<>();
-        followList.forEach(item->{
+        followList.forEach(item -> {
             User user = usersService.getById(item.getFollowerId());
             user.setPassword("");
             userList.add(user);
         });
         Page<User> usersPage = new Page<>();
-        BeanUtils.copyProperties(followPage,usersPage);
+        BeanUtils.copyProperties(followPage, usersPage);
         usersPage.setRecords(userList);
         return usersPage;
     }
@@ -49,20 +49,32 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
     @Override
     public Page<User> pageFollowee(Integer pageNum, Integer pageSize, Long followerId) {
         LambdaQueryWrapper<Follow> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Follow::getFollowerId,followerId);
-        Page<Follow> page = new Page<>(pageNum,pageSize);
+        wrapper.eq(Follow::getFollowerId, followerId);
+        Page<Follow> page = new Page<>(pageNum, pageSize);
         Page<Follow> followPage = this.page(page, wrapper);
         List<Follow> followList = followPage.getRecords();
         List<User> userList = new ArrayList<>();
-        followList.forEach(item->{
+        followList.forEach(item -> {
             User user = usersService.getById(item.getFolloweeId());
             user.setPassword("");
             userList.add(user);
         });
         Page<User> usersPage = new Page<>();
-        BeanUtils.copyProperties(followPage,usersPage);
+        BeanUtils.copyProperties(followPage, usersPage);
         usersPage.setRecords(userList);
         return usersPage;
+    }
+
+    @Override
+    public boolean findIsAttention(Long followerId, Long followeeId) {
+        LambdaQueryWrapper<Follow> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Follow::getFolloweeId, followeeId);
+        wrapper.eq(Follow::getFollowerId, followerId);
+        Follow one = this.getOne(wrapper);
+        if (one != null) {
+            return true;
+        }
+        return false;
     }
 }
 

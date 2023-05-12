@@ -17,5 +17,7 @@ public interface FollowService extends IService<Follow> {
     Page<User> pageFollower(Integer pageNum, Integer pageSize, Long followeeId);
 
     Page<User> pageFollowee(Integer pageNum, Integer pageSize, Long followerId);
+
+    boolean findIsAttention(Long followerId, Long followeeId);
 }
 

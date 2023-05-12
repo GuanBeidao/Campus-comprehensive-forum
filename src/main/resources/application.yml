@@ -3,14 +3,21 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/forum?useSSL=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
     username: root
+#    username: forum
     password: Gyw020409
   redis:
     host: 127.0.0.1
     port: 6379
+#    password: Gyw020409
   servlet:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+  jackson:
+    time-zone: Asia/Shanghai
+    serialization:
+      # Date返回前端转时间戳 但不能解决LocalDateTime转时间戳（JacksonCustomizerConfig类解决）
+      write-dates-as-timestamps: true
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml # 配置xml映射文件

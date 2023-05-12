@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * (Post)表实体类
@@ -23,13 +22,18 @@ public class Post  {
     //帖子id@TableId
     @TableId(type = IdType.AUTO)
     private Long id;
-
     //标题
     private String title;
     //内容
     private String content;
     //图片地址
     private String picUrls;
+    //浏览量
+    private Integer viewCount;
+    //收藏
+    private Integer likeCount;
+    //评论数量
+    private Integer replyCount;
     //用户id
     private Long userId;
     //学校id

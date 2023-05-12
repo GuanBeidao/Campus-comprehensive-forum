@@ -1,7 +1,9 @@
 package com.gbd.forum.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gbd.forum.entity.Reply;
+import com.gbd.forum.entity.dto.ReplyDto;
 
 
 /**
@@ -12,5 +14,6 @@ import com.gbd.forum.entity.Reply;
  */
 public interface ReplyService extends IService<Reply> {
 
+    Page<ReplyDto> getReply(Integer pageNum, Integer pageSize, Long postId);
 }
 

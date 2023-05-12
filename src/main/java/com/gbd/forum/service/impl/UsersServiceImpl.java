@@ -20,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -38,6 +39,9 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private RedisCache redisCache;
 
     @Override
@@ -50,8 +54,8 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         if (exists) {
             throw new SystemException(HttpCodeEnum.REGISTER_FAIL_ACCOUNT);
         }
-
-        user.setAvatar("https://profile.csdnimg.cn/0/A/5/2_u014708644");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setAvatar("https://gbd-forum.oss-cn-beijing.aliyuncs.com/default/avatar/avatar.png");
         user.setIsStudent(0);
         user.setIsRealName(0);
         this.baseMapper.insert(user);

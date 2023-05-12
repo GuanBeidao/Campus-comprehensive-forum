@@ -4,6 +4,9 @@ package com.gbd.forum.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gbd.forum.entity.Reply;
+import com.gbd.forum.entity.dto.PostCardDto;
+import com.gbd.forum.entity.dto.ReplyDto;
+import com.gbd.forum.enums.HttpCodeEnum;
 import com.gbd.forum.service.ReplyService;
 import com.gbd.forum.utils.ResponseResult;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +31,16 @@ public class ReplyController {
     private ReplyService replyService;
 
     /**
-     * 分页查询所有数据
+     * 分页查询所有评论
      *
-     * @param page 分页对象
-     * @param reply 查询实体
+     * @param pageNum 当前页数
+     * @param pageSize 每页数据大小
      * @return 所有数据
      */
-    @GetMapping
-    public ResponseResult selectAll(Page<Reply> page, Reply reply) {
-        return null;
+    @GetMapping("/getReply/{pageNum}/{pageSize}/{postId}")
+    public ResponseResult selectAll(@PathVariable Integer pageNum,@PathVariable Integer pageSize,@PathVariable Long postId) {
+        Page<ReplyDto> replyPage = replyService.getReply(pageNum,pageSize,postId);
+        return ResponseResult.okResult(HttpCodeEnum.GET_REPLY_SUCCESS,replyPage);
     }
 
     /**
@@ -56,9 +60,14 @@ public class ReplyController {
      * @param reply 实体对象
      * @return 新增结果
      */
-    @PostMapping
+    @PostMapping("/addReply")
     public ResponseResult insert(@RequestBody Reply reply) {
-        return null;
+        boolean save = replyService.save(reply);
+        if (save){
+            return ResponseResult.okResult(HttpCodeEnum.ADD_REPLY_SUCCESS);
+        }else{
+            return ResponseResult.okResult(HttpCodeEnum.ADD_REPLY_FAIL);
+        }
     }
 
     /**

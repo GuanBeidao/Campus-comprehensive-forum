@@ -61,6 +61,11 @@ public class ResponseResult<T> implements Serializable {
         return result;
     }
 
+    public static ResponseResult okResult(HttpCodeEnum enums) {
+        ResponseResult result = new ResponseResult(enums.getCode(), enums.getMsg());
+        return result;
+    }
+
     public static ResponseResult errorResult(HttpCodeEnum enums) {
         return setAppHttpCodeEnum(enums, enums.getMsg());
     }
@@ -128,6 +133,14 @@ public class ResponseResult<T> implements Serializable {
 
     //自定义
     public static ResponseResult okResult(HttpCodeEnum httpCodeEnum, Object data) {
+        ResponseResult result = setAppHttpCodeEnum(httpCodeEnum);
+        if (data != null) {
+            result.setData(data);
+        }
+        return result;
+    }
+
+    public static ResponseResult errorResult(HttpCodeEnum httpCodeEnum, Object data) {
         ResponseResult result = setAppHttpCodeEnum(httpCodeEnum);
         if (data != null) {
             result.setData(data);

@@ -4,6 +4,7 @@ package com.gbd.forum.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gbd.forum.entity.Post;
+import com.gbd.forum.entity.dto.PostCardDto;
 import com.gbd.forum.enums.HttpCodeEnum;
 import com.gbd.forum.service.PostService;
 import com.gbd.forum.utils.ResponseResult;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 /**
  * (Post)表控制层
@@ -37,7 +38,7 @@ public class PostController {
      */
     @GetMapping("/recommend/{pageNum}/{pageSize}/{schoolId}/{partId}")
     public ResponseResult selectAll(@PathVariable Integer pageNum,@PathVariable Integer pageSize,@PathVariable Long schoolId,@PathVariable Long partId) {
-        Page<Post> postPage = postService.recommend(pageNum,pageSize,schoolId,partId);
+        Page<PostCardDto> postPage = postService.recommend(pageNum,pageSize,schoolId,partId);
         return ResponseResult.okResult(postPage);
     }
 
@@ -60,10 +61,10 @@ public class PostController {
      * @param id 主键
      * @return 单条数据
      */
-    @GetMapping("{id}")
+    @GetMapping("/getDetail/{id}")
     public ResponseResult selectOne(@PathVariable Serializable id) {
-        Post post = postService.getById(id);
-        return ResponseResult.okResult(post);
+        Map<String,Object> map = postService.getDetailById(id);
+        return ResponseResult.okResult(map);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gbd.forum.entity.Follow;
 import com.gbd.forum.entity.User;
+import com.gbd.forum.enums.HttpCodeEnum;
 import com.gbd.forum.service.FollowService;
 import com.gbd.forum.utils.ResponseResult;
 import org.springframework.web.bind.annotation.*;
@@ -53,35 +54,56 @@ public class FollowController {
     }
 
     /**
+     * 查询是否进行关注
+     *
+     * @param followerId 粉丝id
+     * @param followeeId 被关注者id
+     * @return 所有数据
+     */
+    @GetMapping("/checkIsAttention/{followerId}/{followeeId}")
+    public ResponseResult findIsAttention(@PathVariable Long followerId,@PathVariable Long followeeId) {
+        boolean flag = followService.findIsAttention(followerId, followeeId);
+        if (flag){
+            return ResponseResult.okResult(HttpCodeEnum.FIND_FOLLOW_YES);
+        }else{
+            return ResponseResult.okResult(HttpCodeEnum.FIND_FOLLOW_NO);
+        }
+    }
+
+    /**
      * 新增数据
      *
      * @param follow 实体对象
      * @return 新增结果
      */
-    @PostMapping
+    @PostMapping("/addFollow")
     public ResponseResult insert(@RequestBody Follow follow) {
         boolean save = followService.save(follow);
         if (save){
-            return ResponseResult.okResult();
+            return ResponseResult.okResult(HttpCodeEnum.ADD_FOLLOW_SUCCESS);
         }else{
-            return ResponseResult.errorResult(201,"添加失败");
+            return ResponseResult.errorResult(HttpCodeEnum.ADD_FOLLOW_FAIL);
         }
     }
 
     /**
      * 取消关注
      *
-     * @param myselfId 本人id
-     * @param yourselfId 对方id
+     * @param followerId 本人id
+     * @param followeeId 对方id
      * @return 删除结果
      */
-    @DeleteMapping("removeFollower/{myselfId}/{yourselfId}")
-    public ResponseResult removeFollower(@PathVariable Long myselfId,@PathVariable Long yourselfId) {
+    @DeleteMapping("removeFollower/{followerId}/{followeeId}")
+    public ResponseResult removeFollower(@PathVariable Long followerId,@PathVariable Long followeeId) {
         LambdaQueryWrapper<Follow> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Follow::getFollowerId,myselfId);
-        wrapper.eq(Follow::getFolloweeId,yourselfId);
-        followService.remove(wrapper);
-        return ResponseResult.okResult();
+        wrapper.eq(Follow::getFollowerId,followerId);
+        wrapper.eq(Follow::getFolloweeId,followeeId);
+        boolean remove = followService.remove(wrapper);
+        if (remove){
+            return ResponseResult.okResult(HttpCodeEnum.REMOVE_FOLLOW_SUCCESS);
+        }else {
+            return ResponseResult.okResult(HttpCodeEnum.REMOVE_FOLLOW_FAIL);
+        }
     }
 
     /**

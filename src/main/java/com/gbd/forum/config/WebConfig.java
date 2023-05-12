@@ -37,9 +37,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
-    @Bean//使用@Bean注入fastJsonHttpMessageConvert
+    /*@Bean
     public HttpMessageConverter fastJsonHttpMessageConverters() {
-        //1.需要定义一个Convert转换消息的对象
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
@@ -51,11 +50,11 @@ public class WebConfig implements WebMvcConfigurer {
         fastConverter.setFastJsonConfig(fastJsonConfig);
         HttpMessageConverter<?> converter = fastConverter;
         return converter;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(fastJsonHttpMessageConverters());
-    }
+    }*/
 
 }
